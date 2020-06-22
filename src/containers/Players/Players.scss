@@ -1,0 +1,13 @@
+.players {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  &__player {
+    &--winner {
+      border: 5px solid rgb(0, 255, 0);
+      padding: 10px;
+    }
+  }
+}

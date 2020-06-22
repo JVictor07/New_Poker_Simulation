@@ -11,6 +11,7 @@ export default function Card({card}) {
   const suit = ReturnSuit(card)
 
   function ReturnSuit(card) {
+    //If has "10"
     if (card.length === 3) {
       return card.substr(2, 1);
     }
@@ -18,6 +19,7 @@ export default function Card({card}) {
   }
 
   function ReturnValue(card) {
+    //If has "10"
     if (card.length === 3) {
       return card.substr(0, 2)
     }
@@ -39,10 +41,10 @@ export default function Card({card}) {
   return (
     <li className="card">
       <span className="card__value">{value}</span>
-      {spades && <span className="card__suit card__suit--red">&spades;</span>}
       {diams && <span className="card__suit card__suit--red">&diams;</span>}
+      {hearts && <span className="card__suit card__suit--red">&hearts;</span>}
+      {spades && <span className="card__suit">&spades;</span>}
       {clubs && <span className="card__suit">&clubs;</span>}
-      {hearts && <span className="card__suit">&hearts;</span>}
     </li>
   );
 }

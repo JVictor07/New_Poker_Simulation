@@ -8,7 +8,7 @@ export default function Routes() {
   return (
     <Switch>
       <Route path="/" exact component={Login} />
-      <Route path="/Game/:players" exact component={Game} />
+      <Route path="/Game/:number_of_players" exact component={Game} />
     </Switch>
   )
 }

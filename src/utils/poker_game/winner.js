@@ -1,91 +1,94 @@
 import * as Global from './globals'
-/* 
------------------------------------------------------------------------------
-*/
-function AnalisarNaipe(cartas) {
 
-  function ContarNaipesIguais(naipes) {
-    //Retorno os naipes iguais seu antecessor ou sucessor
-    let naipes_iguais = naipes.filter((naipe, index) => (
-      naipe === naipes[index - 1] || naipe === naipes[index + 1]
-    ))
-    //Realiza uma filtragem, pois posso ter [c,c,c,d,d] 
-    naipes_iguais = naipes_iguais.filter((naipe) => (
-      naipes_iguais[0] === naipe
+//Return true if 5 suits are equal, else, false
+function CheckTheNaipe(cards) {
+
+  //Return an array with the equals suits
+  function CountEqualSuits(suits) {
+    //Return the suit which is equal your predecessor and successor
+    let equal_suits = suits.filter((suit, index) => (
+      suit === suits[index - 1] || suit === suits[index + 1]
     ))
 
-    return naipes_iguais
-  } 
+    //Filtering, because I can have [c,c,c,d,d] 
+    equal_suits = equal_suits.filter((suit) => (
+      equal_suits[0] === suit
+    ))
+
+    return equal_suits
+  }
   
-  //Retorno somente os naipes das cartas
-  const naipes = Global.RetornarSomenteNaipes(cartas)
-  //Me retorna o número de naipes iguais
-  const naipes_iguais = ContarNaipesIguais(naipes)
+  //This function will return something the suits of my cards
+  const suits = Global.ReturnSomethingSuits(cards)
 
-  //Como só é pontuado caso todos os naipes sejam iguais, só me interessa se 
-  if(naipes_iguais.length === 5){
-    return "IS_SAME_SUIT"
+  //Return an array with the equals suits
+  const equals_suits = CountEqualSuits(suits)
+
+  //Poker something have points with suits, if it is bigger than 5
+  if(equals_suits.length === 5){
+    return true
   }else{
-    return "IS_NOT_SAME_SUIT"
+    return false
   }
 }
 
-function AnalisarSequencia(cartas) {
-  let valores_cartas = Global.RetornarSomenteValoresCartas(cartas)
+//Return true if the player has a sequence, else, false
+function CheckIfIsSequence(cards) {
+  //Return the values of my cards
+  let cards_values = Global.ReturnTheCardsValue(cards)
 
-  valores_cartas = Global.TransformarLetrasEmNumeros(valores_cartas)
+  //Determine the value of the "A"
+  if(cards_values.indexOf("K") >= 0){
+    //Case have an "K", in this sequence, the "As" will value 14
+    cards_values = Global.TransformLettersInNumbers(cards_values, true)
+  }else {
+    //Else, in this sequence, the "As" will value 1
+    cards_values = Global.TransformLettersInNumbers(cards_values)
+  }
 
-  valores_cartas = Global.OrganizarArrayDeNumeros(valores_cartas)
+  //Organize my array in an ascending form
+  cards_values = Global.OrganizeArrayOfNumbers(cards_values)
 
-  valores_cartas = Global.RetirarRepeticoes(valores_cartas)
+  cards_values = Global.RemoveRepetitions(cards_values)
 
-  function VerificarSeESequencia(cartas) {
+  //Return true of false
+  function CheckIfIsSequence(cards) {
     let i = 0
-    const next_cart = cartas[i + 1]
+    const next_cart = cards[i + 1]
 
-    while(cartas[i] + 1 === next_cart){
+    while(cards[i] + 1 === next_cart){
       i++
     }
 
-    //Se a var "i", se igualou a 4, significa que temos uma sequencia
-    //[1, 2, 3, 4, 5], após o 1, durante quatro vezes
     if(i >= 4){
-      return "IS_SEQUENCE"
+      return true
     }
 
-    return "IS_NOT_SEQUENCE"
+    return false
   }
 
-  const resultado = VerificarSeESequencia(valores_cartas)
+  const result = CheckIfIsSequence(cards_values)
 
-  return resultado
+  return result
 }
 
-function AnalisarCarta(cartas) {
+//Return an object which has the card name and
+//how much times it repeat
+function CheckAllRepetitions(cards) {
 
-  const valores_das_cartas = Global.RetornarSomenteValoresCartas(cartas)
+  const cards_values = Global.ReturnTheCardsValue(cards)
 
-  const repeticoes = Global.DevolverRepeticoes(valores_das_cartas)
-
-  //Retorna cada modelo de carta presente no array
-  //[1,1,3,3,5] => [1,3,5]
-  function SepararTiposCartas(cartas) {
-    const tipos = cartas.filter((carta, index) => (
-      cartas.indexOf(carta) === index
-    ))
-
-    return tipos
-  }
+  const repetitions = Global.ReturnRepetitions(cards_values)
   
-  function CalcularRepeticoes(tipos, cartas) {
-    const repeticoes = tipos.map((tipo) => {
+  function CalcRepetitions(types, cards) {
+    const repetitions = types.map((type) => {
       let obj_carta = {
-        carta: tipo,
+        carta: type,
         vezes: 0,
       };
 
-      cartas.forEach((carta) => {
-        if (tipo === carta) {
+      cards.forEach((carta) => {
+        if (type === carta) {
           obj_carta.vezes++;
         }
       });
@@ -94,79 +97,136 @@ function AnalisarCarta(cartas) {
     }); 
 
     //Pois só quero as maiores repetições
-    if (repeticoes.length === 3) {
-      //Como repeticoes já será um array organizado do menor ao maior
+    if (repetitions.length === 3) {
+      //Como repetitions já será um array organizado do menor ao maior
       //E sabemos que o maior nú
-      if(repeticoes[0].vezes === 3){
-        repeticoes.splice(1, 1)
+      if(repetitions[0].vezes === 3){
+        repetitions.splice(1, 1)
       } else {
-        repeticoes.splice(0, 1)
+        repetitions.splice(0, 1)
       }
     }
 
-    return repeticoes;
+    return repetitions;
   }
 
-  const tipos_cartas = SepararTiposCartas(repeticoes)
-  const resultado = CalcularRepeticoes(tipos_cartas, repeticoes)
-
-  return resultado
+  const cards_types = Global.RemoveRepetitions(repetitions)
+  const result = CalcRepetitions(cards_types, repetitions)
+  return result
 }
 
-export function CalcularPontuacao(cartas) {
-  console.log(cartas)
-
-  const results = {
-    is_same_suit: AnalisarNaipe(cartas),
-    is_sequence: AnalisarSequencia(cartas),
-    repeticoes: AnalisarCarta(cartas)
+export function DiscoverTheWinner(players, table_cards) {
+  
+  //Check each playes's score
+  for (var i=0; i <= (players.length - 1); i++) {
+    const score = ReturnThePlayersScore(players[i].cards)
+    players[i].score = score
   }
 
-  const {is_same_suit, is_sequence, repeticoes} = results
+  
+  function ReturnThePlayersScore(user_cards) {
+    const cards = [...user_cards, ...table_cards]
 
-  //Straight Flush
-  if (is_sequence && is_same_suit) {
-    return 9
+    const results = {
+      is_same_suit: CheckTheNaipe(cards), //return boolean
+      is_sequence: CheckIfIsSequence(cards), //return boolean
+      repetitions: CheckAllRepetitions(cards) //return []
+    }
+
+    //Return the player's score
+    function CalcThePlayersScore(results) {
+      const { is_same_suit, is_sequence, repetitions } = results;
+
+      //Straight Flush
+      if (is_sequence && is_same_suit) {
+        return 9;
+      }
+
+      //Quadra
+      if (repetitions.length !== 0) {
+        if (repetitions[0].vezes === 4) {
+          return 8;
+        }
+      }
+
+      //Full House
+      if (repetitions[0] && repetitions[1]) {
+        if (
+          (repetitions[0].vezes === 3 && repetitions[1].vezes === 2) ||
+          (repetitions[1].vezes === 3 && repetitions[0].vezes === 2)
+        ) {
+          return 7;
+        }
+      }
+
+      // Flush
+      if (is_same_suit) {
+        return 6;
+      }
+
+      // Sequencia
+      if (is_sequence) {
+        return 5;
+      }
+
+      // Trinca
+      if (repetitions.length !== 0) {
+        if (repetitions[0].vezes === 3) {
+          return 4;
+        }
+      }
+
+      // Dois Pares
+      if (repetitions[0] && repetitions[1]) {
+        if (repetitions[0].vezes === 2 && repetitions[1].vezes === 2) {
+          return 3;
+        }
+      }
+
+      // Par
+      if (repetitions.length !== 0) {
+        if (repetitions[0].vezes === 2) {
+          return 2;
+        }
+      }
+
+      // Carta Alta
+      return 1;
+    }
+
+    return CalcThePlayersScore(results)
   }
 
-  //Quadra
-  if (repeticoes[0].vezes === 4){
-    return 8
+  //Return an array with all winners, or winner index, case have
+  //something one
+  function DeterminarGanhador(players) {
+    const winners = []
+    const winner = {
+      score: 0,
+      index: 0
+    }
+
+    players.forEach((player, index) => {
+      if(player.score > winner.score){
+        winner.score = player.score
+        winner.index = index
+      }
+    })
+
+    players.forEach((player, index) => {
+      if(player.score === winner.score){
+        winners.push(index)
+      }
+    })
+
+    if (winners.length > 0){
+      return winners
+    }
+
+    return winner.index
   }
 
-  //Full House
-  if (
-    (repeticoes[0].vezes === 3 && repeticoes[1].vezes === 2) ||
-    (repeticoes[1].vezes === 3 && repeticoes[0].vezes === 2)
-  ) {
-    return 7;
-  }
+  const winner = DeterminarGanhador(players)
 
-  // Flush
-  if(is_same_suit){
-    return 6
-  }
-
-  // Sequencia
-  if(is_sequence){
-    return 5
-  }
-
-  // Trinca
-  if(repeticoes[0].vezes === 3){
-    return 4
-  }
-
-  // Dois Pares
-  if(repeticoes[0].vezes === 2 && repeticoes[1].vezes === 2){
-    return 3
-  }
-
-  // Par
-  if(repeticoes[0].vezes === 2){
-    return 2
-  }
-
-  // Carta Alta
-  return 1
+  return winner
 }

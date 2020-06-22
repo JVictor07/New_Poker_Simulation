@@ -1,0 +1,29 @@
+.card {
+  box-shadow: 1px 3px 12px rgba(0, 0, 0, 0.377);
+  flex-direction: column;
+  background: white;
+  border-radius: 5px;
+  width: 130px;
+  height: 220px;
+  display: flex;
+  padding: 10px;
+
+  &:not(:nth-child(1)) {
+    margin-left: 12px;
+  }
+  
+  &__value {
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  &__suit {
+    font-size: 100px;
+    margin: 10px auto 0 auto;
+    padding: 0;
+
+    &--red{
+      color: red;
+    }
+  }
+}

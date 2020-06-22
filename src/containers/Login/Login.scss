@@ -22,17 +22,25 @@
   &__title {
     color: #fecb4c;
     text-transform: uppercase;
-    font-size: 42px;
+    font-size: 48px;
   }
 
   &__form {
     display: flex;
     flex-direction: column;
 
+    input{
+      outline: none;
+      padding: 15px 20px;
+      border-radius: 5px;
+      border: none;
+    }
+
     .form__button{
       margin-top: 10px;
       padding: 10px 10px;
       text-transform: uppercase;
+      font-weight: bold;
     
       background: #fecb4c;
       border: none;
@@ -43,7 +51,4 @@
     }
   }
 
-  &__form input{
-    padding: 10px 20px;
-  }
 }
