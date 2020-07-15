@@ -72,8 +72,12 @@ export function ReturnRepetitions(arr) {
     } else if (return_the_next) {
       return_the_next = false
       return card
+    } else {
+      return null
     }
   })
+
+  console.log(repetitions)
 
   return repetitions
 }
